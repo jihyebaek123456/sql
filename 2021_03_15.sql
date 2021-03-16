@@ -167,4 +167,7 @@ WHERE job = 'SALESMAN' OR empno LIKE '78%';  --LIKE는 문자열 매칭 -> 숫�
 --AND, OR 실습 where13
 SELECT *
 FROM emp
-WHERE job = 'SALESMAN' OR empno BETWEEN 7800 AND 7899;
+WHERE job = 'SALESMAN'
+    OR empno BETWEEN 7800 AND 7899
+    OR empno BETWEEN 780 AND 789
+    OR empno = 78;
