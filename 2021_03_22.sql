@@ -92,9 +92,12 @@ FROM prod LEFT OUTER JOIN buyprod
     ON (buy_prod = prod_id
         AND buy_date = TO_DATE('05/01/25', 'RR/MM/DD'));
 
---행 갯수가 같아야 함 (왜?)
+--행 갯수가 같아야 함 (왜? 1대1 대응이라) / emp e, emp m, e.empno = m.mgr과 비교 
 SELECT COUNT(*)
 FROM prod;
+
+SELECT e.ename AS mgr, m.ename AS emp
+FROM emp e LEFT OUTER JOIN emp m ON (e.empno = m.mgr);
 
 SELECT buy_date, buy_prod, prod_id, prod_name, buy_qty
 FROM prod, buyprod
