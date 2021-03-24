@@ -44,7 +44,7 @@ FROM emp, dept;
 SELECT customer.cid, cnm, pid, pnm
 FROM customer, product;
 
---하..
+--다시 풀어보기..
 SELECT u.rg, u.count, d.count
 FROM 
     (
@@ -60,7 +60,7 @@ FROM
     GROUP BY sido, sigungu
     ) d
 WHERE u.rg = d.rg
-GROUP BY u.rg u.count, d.count;
+GROUP BY u.rg;
 
 --행을 컬럼으로 변경
 --storecategory가 BURGER KING이면 1, 0
