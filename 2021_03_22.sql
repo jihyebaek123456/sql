@@ -4,6 +4,12 @@ FROM prod, lprod
 WHERE prod_lgu = lprod_gu
 ORDER BY lprod_gu, prod_id;
 
+SELECT *
+FROM prod
+
+SELECT *
+FROM lprod
+
 --실습 join2
 SELECT buyer_id, buyer_name, prod_id, prod_name
 FROM buyer, prod
@@ -24,6 +30,12 @@ SELECT customer.cid, cnm, pid, day, cnt
 FROM customer, cycle
 WHERE customer.cid = cycle.cid
     AND cnm IN ('brown', 'sally');
+
+SELECT *
+FROM customer
+
+SELECT *
+FROM cycle
 
 --실습 join5
 SELECT customer.cid, cnm, cycle.pid, pnm, day, cnt
