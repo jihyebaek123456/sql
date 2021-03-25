@@ -1,11 +1,22 @@
 --group function 실습 grp3
-SELECT DECODE(deptno, 10, 'ACCOUNTING', 20, 'RESEARCH', 30, 'SALES', OPERATION),
+SELECT DECODE(deptno, 10, 'ACCOUNTING', 20, 'RESEARCH', 30, 'SALES', 'OPERATION'),
         MAX(sal),
         MIN(sal),
         ROUND(AVG(sal),2),
         SUM(sal),
         COUNT(sal),
         COUNT(mgr),
+        COUNT(*)
+FROM emp
+GROUP BY deptno;
+
+SELECT DECODE(deptno, 10, 'ACCOUNTING', 20, 'RESEARCH', 30, 'SALES', 'OPERATION'),
+        MAX(sal),
+        MIN(sal),
+        ROUND(AVG(sal),2),
+        SUM(sal),
+        COUNT(sal),
+        COUNT(NVL(mgr,0)),
         COUNT(*)
 FROM emp
 GROUP BY deptno;
@@ -105,7 +116,7 @@ ORDER BY e.deptno;
 SELECT e.empno, e.ename, e.deptno, d.dname
 FROM emp e, dept d
 WHERE e.deptno = d.deptno
-        AND e.deptno IN (10, 30);
+        AND d.deptno IN (10, 30);
         
 --실습 join0_2
 SELECT e.empno, e.ename, e.sal, e.deptno, d.dname
