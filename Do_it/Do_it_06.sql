@@ -1,0 +1,198 @@
+SELECT *
+FROM EMP
+WHERE LENGTH(JOB) >= 6;
+
+SELECT JOB, SUBSTR(JOB, 1, 2), SUBSTR(JOB, 3, 2), SUBSTR(JOB, 5)
+FROM EMP;
+
+SELECT SUBSTR(ENAME, 3)
+FROM EMP;
+
+SELECT JOB,
+            SUBSTR(JOB, -LENGTH(JOB)),
+            SUBSTR(JOB, -LENGTH(JOB), 2),
+            SUBSTR(JOB, -3)
+FROM EMP;
+
+SELECT INSTR(ENAME, 'S')
+FROM EMP;
+
+SELECT *
+FROM EMP
+WHERE INSTR(ENAME, 'S') > 0;
+
+SELECT '010-1234-5678' AS REPLACE_BEFORE,
+           REPLACE('010-1234-5678', '-', ' ') AS REPLACE_1,
+           REPLACE('010-1234-5678', '-') AS REPLACE_2
+FROM DUAL;
+
+SELECT 'Oracle',
+           LPAD('Oracle', 10, '#') AS LPAD_1,
+           RPAD('Oracle', 10, '*') AS RPAD_1,
+           LPAD('Oracle', 10) AS LPAD_2,
+           RPAD('Oracle', 10) AS LPAD_2
+FROM DUAL;
+
+SELECT RPAD('971225-', 14, '*') AS RPAD_JMNO,
+           RPAD('010-1234-', 13, '*') AS RPAD_PHONE
+FROM DUAL;
+
+SELECT CONCAT(EMPNO, CONCAT(' : ', ENAME))
+FROM EMP
+WHERE ENAME = 'SCOTT';
+
+SELECT '[' || TRIM(' _ _Oracle_ _ ') || ']' AS TRIM,
+           '[' || TRIM(LEADING FROM ' _ _Oracle_ _ ') || ']' AS TRIM_LEADING,
+           '[' || TRIM(TRAILING FROM ' _ _Oracle_ _ ') || ']' AS TRIM_TRAILING,
+           '[' || TRIM(BOTH FROM ' _ _Oracle_ _ ') || ']' AS TRIM_BOTH
+FROM DUAL;
+
+SELECT '[' || TRIM('_' FROM '_ _Oracle_ _') || ']' AS TRIM,
+           '[' || TRIM(LEADING '_' FROM '_ _Oracle_ _') || ']' AS TRIM_LEADING,
+           '[' || TRIM(TRAILING '_' FROM '_ _Oracle_ _') || ']' AS TRIM_TRAILING,
+           '[' || TRIM(BOTH '_' FROM '_ _Oracle_ _') || ']' AS TRIM_BOTH
+FROM DUAL;
+
+SELECT '[' || LTRIM('<_Oracle_>', '_<') || ']' AS LTRIM_2,
+           '[' || RTRIM('<_Oracle_>', '>_') || ']' AS RTRIM_2
+FROM DUAL;
+
+SELECT ROUND(1234.5678) AS ROUND,
+           ROUND(1234.5678, 0) AS ROUND_0,
+           ROUND(1234.5678, 1) AS ROUND_1,
+           ROUND(1234.5678, -1) AS ROUND_MINUS1,
+           ROUND(1234.5678, -2) AS ROUND_MINUS2
+FROM DUAL;
+
+SELECT TRUNC(1234.5678) AS TRUNC,
+           TRUNC(1234.5678, 0) AS TRUNC_0,
+           TRUNC(1234.5678, 1) AS TRUNC_1,
+           TRUNC(1234.5678, -1) AS TRUNC_MINUS1,
+           TRUNC(1234.5678, -2) AS TRUNC_MINUS2
+FROM DUAL;
+
+SELECT CEIL(3.14),
+           FLOOR(3.14),
+           CEIL(-3.14),
+           FLOOR(-3.14)
+FROM DUAL;
+
+SELECT EMPNO, ENAME, HIREDATE,
+           ADD_MONTHS(HIREDATE, 120) AS WORK10YEAR
+FROM EMP;
+
+SELECT EMPNO, ENAME, HIREDATE, SYSDATE
+FROM EMP
+WHERE ADD_MONTHS(HIREDATE, 480) > SYSDATE;
+
+SELECT SYSDATE,
+           ADD_MONTHS(SYSDATE, 6)
+FROM DUAL;
+
+SELECT EMPNO, ENAME, HIREDATE, SYSDATE,
+           MONTHS_BETWEEN(HIREDATE, SYSDATE) AS MONTHS1,
+           MONTHS_BETWEEN(SYSDATE, HIREDATE) AS MONTHS2,
+           TRUNC(MONTHS_BETWEEN(SYSDATE, HIREDATE)) AS MONTH3
+FROM EMP;
+
+SELECT SYSDATE,
+           NEXT_DAY(SYSDATE, '월요일'),
+           LAST_DAY(SYSDATE)
+FROM DUAL;
+
+SELECT SYSDATE,
+           ROUND(SYSDATE, 'CC'),
+           ROUND(SYSDATE, 'YYYY'),
+           ROUND(SYSDATE, 'Q'),
+           ROUND(SYSDATE, 'DDD'),
+           ROUND(SYSDATE, 'HH')
+FROM DUAL;
+
+SELECT SYSDATE,
+           TRUNC(SYSDATE, 'CC'),
+           TRUNC(SYSDATE, 'YYYY'),
+           TRUNC(SYSDATE, 'Q'),
+           TRUNC(SYSDATE, 'DDD'),
+           TRUNC(SYSDATE, 'HH')
+FROM DUAL;
+
+SELECT SYSDATE,
+           TO_CHAR(SYSDATE, 'MM'),
+           TO_CHAR(SYSDATE, 'MON'),
+           TO_CHAR(SYSDATE, 'MONTH'),
+           TO_CHAR(SYSDATE, 'DD'),
+           TO_CHAR(SYSDATE, 'DY'),
+           TO_CHAR(SYSDATE, 'DAY')
+FROM DUAL;
+
+SELECT SYSDATE,
+           TO_CHAR(SYSDATE, 'MM'),
+           TO_CHAR(SYSDATE, 'MON', 'NLS_DATE_LANGUAGE = KOREAN'),
+           TO_CHAR(SYSDATE, 'MON', 'NLS_DATE_LANGUAGE = JAPANESE'),
+           TO_CHAR(SYSDATE, 'MON', 'NLS_DATE_LANGUAGE = ENGLISH'),
+           TO_CHAR(SYSDATE, 'MONTH', 'NLS_DATE_LANGUAGE = KOREAN'),
+           TO_CHAR(SYSDATE, 'MONTH', 'NLS_DATE_LANGUAGE = JAPANESE'),
+           TO_CHAR(SYSDATE, 'MONTH', 'NLS_DATE_LANGUAGE = ENGLISH')
+FROM DUAL;
+
+SELECT TO_NUMBER('1,300', '999,999') - TO_NUMBER('1,500', '999,999')
+FROM DUAL;
+
+SELECT EMPNO, ENAME, SAL, COMM, SAL+COMM,
+           NVL(COMM, 0),
+           SAL+NVL(COMM, 0)
+FROM EMP;
+
+SELECT EMPNO, ENAME, COMM,
+           NVL2(COMM, 'O', 'X'),
+           NVL2(COMM, SAL*12+COMM, SAL*12)
+FROM EMP;
+
+SELECT EMPNO, ENAME, COMM,
+           CASE
+                    WHEN COMM IS NULL THEN '해당사항 없음'
+                    WHEN COMM = 0 THEN '수당없음'
+                    WHEN COMM > 0 THEN '수당 : ' || COMM
+           END AS COMM_TEXT
+FROM EMP;
+
+--1
+SELECT EMPNO,
+           RPAD(SUBSTR(EMPNO, 1, 2), 4, '*') AS MASKING_EMPNO,
+           ENAME,
+           RPAD(SUBSTR(ENAME, 1, 1), LENGTH(ENAME), '*') AS MASKING_ENAME
+FROM EMP
+WHERE LENGTH(ENAME) >= 5
+    AND LENGTH(ENAME) < 6;
+
+SELECT EMPNO,
+           RPAD(SUBSTR(TO_CHAR(EMPNO), 1, 2), 4, '*') AS MASKING_EMPNO,
+           ENAME,
+           RPAD(SUBSTR(ENAME, 1, 1), LENGTH(ENAME), '*') AS MASKING_ENAME
+FROM EMP
+WHERE LENGTH(ENAME) >= 5
+    AND LENGTH(ENAME) < 6;
+
+--2
+SELECT EMPNO, ENAME, SAL,
+           TRUNC(SAL/21.5, 2) AS DAY_PAY,
+           ROUND(SAL/21.5/8, 1) AS TIME_PAY
+FROM EMP;
+
+--3
+SELECT EMPNO, ENAME, HIREDATE,
+           TO_CHAR(NEXT_DAY(ADD_MONTHS(HIREDATE, 3), 2), 'YYYY-MM-DD') AS R_JOB,
+           NVL(TO_CHAR(COMM), 'N/A') AS COMM
+FROM EMP;
+
+--4
+SELECT EMPNO, ENAME, MGR,
+           CASE
+                    WHEN MGR IS NULL THEN  '0000'
+                    WHEN SUBSTR(MGR, 1, 2) = '75' THEN '5555'
+                    WHEN SUBSTR(MGR, 1, 2) = '76' THEN '6666'
+                    WHEN SUBSTR(MGR, 1, 2) = '77' THEN '7777'
+                    WHEN SUBSTR(MGR, 1, 2) = '78' THEN '8888'
+                    ELSE TO_CHAR(MGR)
+           END AS CHG_MGR
+FROM EMP;
