@@ -108,27 +108,20 @@ FROM PROD;
    1. 함수 명 : FN_CART_QAVG, FN_CART_QAMT, FN_CART_FAMT
    2. 매개변수 : 입력용 - 상품 코드, 년도
 
---상품 별 판매 횟수
-SELECT COUNT(CART_QTY)
-FROM CART
-WHERE CART_NO LIKE '2005%' -- 변수
-GROUP BY CART_PROD
-
---함수
+--상품 별 평균 판매 횟수
 CREATE OR REPLACE FUNCTION FN_CART_QAVG (
-    P_CODE IN PROD.PROD_ID%TYPE
+    P_CODE IN PROD.PROD_ID%TYPE,
     P_YEAR IN CHAR)
     RETURN NUMBER
 
 AS
     V_QAVG NUMBER := 0;
-    V_YEAR CHAR(5) := P_YEAR || '%';
    
 BEGIN
     SELECT ROUND(AVG(CART_QTY))
     INTO V_QAVG
     FROM CART
-    WHERE CART_NO LIKE V_YEAR
+    WHERE CART_NO LIKE P_YEAR||'%'
         AND CART_PROD = P_CODE;
     
     RETURN V_QAVG;
@@ -136,43 +129,52 @@ BEGIN
 END;
 
 --판매 수량 합계
-SELECT SUM(CART_QTY)
-FROM CART
-WHERE CART_NO LIKE 변수
-
---함수
 CREATE OR REPLACE FUNCTION FN_CART_QAMT (
-    )
+    P_CODE PROD.PROD_ID%TYPE,
+    P_YEAR CHAR)
+    RETURN NUMBER
 
+AS
+    V_QATY NUMBER := 0;
 
---판매 금액 합계
-SELECT SUM(CART_QTY * PROD_PRICE)
-FROM CART C, PROD P
-WHERE C.CART_PROD = P.PROD_ID
-    AND C.CART_PROD = 변수
-    AND C.CART_NO LIKE 변수
+BEGIN
+    SELECT SUM(CART_QTY)
+    INTO V_QATY
+    FROM CART
+    WHERE CART_NO LIKE P_YEAR||'%'
+        AND CART_PROD = P_CODE;
+       
+    RETURN V_QATY;
 
---함수
+END;
+
+--상품 별 판매 금액 합계
 CREATE OR REPLACE FUNCTION FN_CART_FAMT (
-    P_CODE IN PROD.PORD_ID%TYPE
+    P_CODE IN PROD.PROD_ID%TYPE,
     P_YEAR IN VARCHAR2)
     RETURN NUMBER
 
 AS
-    V_QTY NUMBER := 0;
+    V_FAMT NUMBER := 0;
 
 BEGIN
-    SELECT SUM(CART_QTY * PROD_PRICE)
-    INTO V_QTY
+    SELECT SUM(C.CART_QTY * P.PROD_PRICE)
+    INTO V_FAMT
     FROM CART C, PROD P
     WHERE C.CART_PROD = P.PROD_ID
        AND C.CART_PROD = P_CODE
-       AND C.CART_NO LIKE 'P_YEAR%;';
-       
-    RETURN V_QTY;
+       AND C.CART_NO LIKE P_YEAR||'%';
+    
+    RETURN V_FAMT;
 
 END;
 
+--실행
+SELECT PROD_ID AS 상품명,
+          NVL(FN_CART_QAVG(PROD_ID, '2005'), 0) AS "평균 판매 횟수",
+          NVL(FN_CART_QAMT(PROD_ID, '2005'), 0) AS "판매 수량",
+          NVL(TO_CHAR(FN_CART_FAMT(PROD_ID, '2005'), '999,999,999'), 0) AS "판매 금액"
+FROM PROD
 
 ※ 2005년 2~3월 제품 별 매입 수량을 구하여 제고 수불 테이블을 UPDATE
    처리 일자는 2005년 3월 마지막일
@@ -220,8 +222,7 @@ DECLARE
 BEGIN
     FOR REC IN CUR_PROD
     LOOP
-        V_RES :=
-        FN_REMAIN_UPDATE(REC.BUY_PROD, REC.BUY_QTY, LAST_DAY('20050331'));  --반환 값을 담을 것이 없으면 오류
+        V_RES :=FN_REMAIN_UPDATE(REC.BUY_PROD, REC.BUY_QTY, LAST_DAY('20050331'));  --반환 값을 담을 것이 없으면 오류
         DBMS_OUTPUT.PUT_LINE(V_RES);
     END LOOP;
     
@@ -232,9 +233,21 @@ FROM REMAIN;
 
 ROLLBACK;
 
---왜 안 되는..?
-SELECT FN_REMAIN_UPDATE(A.BUY_PROD, A.BUY_QTY, LAST_DAY('20050331'))
-FROM (SELECT BUY_PROD, SUM(BUY_QTY) AS BUY_QTY
+--왜 안 되는..? : cannot perform a DML operation inside a query 
+SELECT FN_REMAIN_UPDATE(A.BUY_PROD, A.BQTY, LAST_DAY('20050331'))
+FROM (SELECT BUY_PROD, SUM(BUY_QTY) AS BQTY
           FROM BUYPROD
           WHERE BUY_DATE BETWEEN '20050201' AND '20050331'
           GROUP BY BUY_PROD) A;
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
