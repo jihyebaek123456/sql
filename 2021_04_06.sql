@@ -135,7 +135,7 @@ BEGIN
         DBMS_OUTPUT.PUT_LINE(V_PNAME||'         '||V_PCOST||'         '||NVL(V_PMILE, 0));
     END LOOP;
     CLOSE CUR_PROD_INFO;
-    
+
 END;
 
 --표준 SQL
