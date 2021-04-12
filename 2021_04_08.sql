@@ -174,16 +174,23 @@ BEGIN
     SET MEM_DELETE = 'Y'
     WHERE MEM_ID = P_ID;
 
+    --COMMIT;
+
 END;
 
 --프로시져 실행
+ACCEPT P_YEAR PROMPT '년도 입력(구매 이력이 없는 회원 조회) : '
 DECLARE
     CURSOR CUR_MEM_BUY IS
         SELECT MEM_ID
         FROM MEMBER
         WHERE MEM_ID NOT IN (SELECT CART_MEMBER
                                            FROM CART
-                                           WHERE SUBSTR(CART_NO, 1, 4) = 2005
+                                           WHERE CART_NO LIKE '&P_YEAR%'
+                                                      --SUBSTR(CART_NO, 1, 4) = '&P_YEAR'
+                                                      --칠거지악 중 하나 : 컬럼 가공 X
+                                                      --SUBSTR으로 가공하는 대신 LIKE 연산자 사용
+                                                      --가공 시 똑같이 가공 처리하여 만든 인덱스가 아니면 일반 인덱스는 사용 불가
                                            GROUP BY CART_MEMBER);
 
 BEGIN
@@ -194,6 +201,7 @@ BEGIN
 
 END;
 
+--확인
 SELECT MEM_ID, MEM_NAME, MEM_dELETE
 FROM MEMBER;
 
