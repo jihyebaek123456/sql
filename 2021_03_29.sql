@@ -46,7 +46,7 @@ dept(2) -> emp (4) : 8가지 방법         => 총 16가지 방법
 문자열 년월('201905')이 주어짐
 해당 년월의 일자를 달력 형태로 출력
 --LEVEL은 1부터 시작
-SELECT 
+SELECT DECODE(d, 1, iw+1, iw),
        MIN(DECODE(d, 1, dt)) AS sun,  --max, min 둘 중 아무거나 써도 어차피 값은 하나 뿐이기 때문에 상관 X, ⓑ 오라클이 min을 권장
        MIN(DECODE(d, 2, dt)) AS mon,
        MIN(DECODE(d, 3, dt)) AS tue,
@@ -57,7 +57,7 @@ SELECT
 FROM (  
         SELECT TO_DATE(:YYYYMM, 'YYYYMM') + (LEVEL - 1) AS dt,
                TO_CHAR(TO_DATE(:YYYYMM, 'YYYYMM') + (LEVEL - 1), 'D') AS d,
-               TO_CHAR(TO_DATE(:YYYYMM, 'YYYYMM') + (LEVEL - 1), 'DD') AS iw
+               TO_CHAR(TO_DATE(:YYYYMM, 'YYYYMM') + (LEVEL - 1), 'IW') AS iw
         FROM dual
         CONNECT BY LEVEL <= TO_CHAR(LAST_DAY(TO_DATE(:YYYYMM, 'YYYYMM')), 'DD')
      )  
